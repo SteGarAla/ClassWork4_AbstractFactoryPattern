@@ -1,5 +1,6 @@
 ﻿using ClassWork4_AbstractFactoryPattern;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ClassWork4_AbstractFactoryPattern
 {
@@ -10,19 +11,33 @@ namespace ClassWork4_AbstractFactoryPattern
         NOKIA
     }
 
+
+
+
+
+
+
+
+
     class EntryPoint
     {
         static void Main()
         {
-           PhoneTypeChecker ok = new PhoneTypeChecker(Manufacturers.SAMSUNG);
-            ok.CheckProducts();
 
 
+            PhoneTypeChecker obj = new PhoneTypeChecker(Manufacturers.SAMSUNG);
+            obj.CheckProducts();
+
+
+            PhoneTypeChecker obj2 = new PhoneTypeChecker(Manufacturers.HTC);
+            obj2.CheckProducts();
+
+            PhoneTypeChecker obj3 = new PhoneTypeChecker(Manufacturers.NOKIA);
+            obj3.CheckProducts();
         }
     }
 
 
-    //test
 
 
 
@@ -33,74 +48,102 @@ namespace ClassWork4_AbstractFactoryPattern
         Manufacturers manu;
 
         //Operations
-       public PhoneTypeChecker(Manufacturers m)
+
+        public PhoneTypeChecker(Manufacturers m)
         {
-            this.manu = m;
+            manu = m;
         }
 
         public void CheckProducts()
         {
+
             switch (manu)
             {
                 case Manufacturers.SAMSUNG:
-                    new SamsungFactory();
-                    break;
 
+                    factory = new SamsungFactory();
+                    break;
                 case Manufacturers.HTC:
-                    new HTCFactory();
+                    factory = new HTCFactory();
                     break;
 
                 case Manufacturers.NOKIA:
-                    new NokiaFactory();
+                    factory = new NokiaFactory();
                     break;
-
             }
-        }
 
+            Console.WriteLine(factory.GetSmart());
+        }
     }
 
 
-    //ISMART INTERFACE FOR LUMIA, GALAXYS2 AND TITAN  CLASSES
     interface ISmart
     {
-        string getSmart();
+        string getName();
     }
 
-
-    //IDUMB INTERFACE FOR ASHA, GENIE, PRIMO  CLASSES
     interface IDumb
     {
-        string getDumb();
+        string getName();
     }
 
 
-    interface IPhoneFactory : IDumb,ISmart
+    interface IPhoneFactory
     {
-        new ISmart getSmart();
-        new IDumb getDumb();
+        ISmart GetSmart();
+        IDumb GetDumb();
     }
 
 
+
+
+    //SAMSUNG FACTORY
     class SamsungFactory : IPhoneFactory
     {
-        public IDumb getDumb()
+        public IDumb GetDumb()
         {
-            throw new NotImplementedException();
+            return new Genie();
         }
 
-        public ISmart getSmart()
+        public ISmart GetSmart()
         {
-            throw new NotImplementedException();
+            return new GalaxyS2();
+         }
+
+
+    }
+
+
+
+    //HTC FACTORY (looks good )
+    class HTCFactory : IPhoneFactory
+    {
+        public IDumb GetDumb()
+        {
+            return new Primo();
         }
 
-        string IDumb.getDumb()
+        public ISmart GetSmart()
         {
-            throw new NotImplementedException();
+            return new Titan();
+        }
+    }
+
+
+
+
+
+    //NOKIA FACTORY (looks good so far)
+    class NokiaFactory : IPhoneFactory
+    {
+        public IDumb GetDumb()
+        {
+            return new Asha();
         }
 
-        string ISmart.getSmart()
+        public ISmart GetSmart()
         {
-            throw new NotImplementedException();
+            return new Lumia();
         }
     }
 
@@ -122,17 +165,12 @@ namespace ClassWork4_AbstractFactoryPattern
 
 
 
-
-
-
-
-
-
+    //Looking good so far
 
 
     class Lumia : ISmart
     {
-        public string getSmart()
+        public string getName()
         {
             return "Lumia";
         }
@@ -140,7 +178,7 @@ namespace ClassWork4_AbstractFactoryPattern
 
     class GalaxyS2 : ISmart
     {
-        public string getSmart()
+        public string getName()
         {
             return "GalaxyS2";
         }
@@ -148,7 +186,7 @@ namespace ClassWork4_AbstractFactoryPattern
 
     class Titan : ISmart
     {
-        public string getSmart()
+        public string getName()
         {
             return "Titan";
         }
@@ -157,29 +195,26 @@ namespace ClassWork4_AbstractFactoryPattern
 
     class Asha : IDumb
     {
-        public string getDumb()
+        public string getName()
         {
-            return "Asha";
+            return "Asha"; ;
         }
     }
 
     class Genie : IDumb
     {
-        public string getDumb()
+        public string getName()
         {
-            return "Genie";
+            return "Genie"; 
         }
     }
 
     class Primo : IDumb
     {
-        public string getDumb()
+        public string getName()
         {
             return "Primo";
         }
     }
-
-
-
 
 }
